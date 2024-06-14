@@ -1,10 +1,10 @@
 -- a SQL script that creates a trigger that resets the attribute
 -- valid_email only when the email has been changed.
-DROP TRIGGER IF EXISTS decrease_quantity;
+DROP TRIGGER IF EXISTS validate_email;
 DELIMITER $$
 
-CREATE TRIGGER decrease_quantity
-BEFORE UPDATE ON orders
+CREATE TRIGGER validate_email
+BEFORE UPDATE ON users
 FOR EACH ROW
 BEGIN
     IF OLD.email != NEW.email THEN
