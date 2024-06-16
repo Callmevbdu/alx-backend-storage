@@ -6,6 +6,26 @@ the collection nginx of the database logs
 from pymongo import MongoClient
 
 
+if __name__ == "__main__":
+    client = MongoClient('mongodb://127.0.0.1:27017')
+    nginx_collection = client.logs.nginx
+
+    # Count the total number of logs
+    total_logs = nginx_collection.count_documents({})
+    print(f"{total_logs} logs")
+
+    # Count the number of logs for each HTTP method
+    methods = ["GET", "POST", "PUT", "PATCH", "DELETE"]
+    print("Methods:")
+    for method in methods:
+        count = nginx_collection.count_documents({"method": method})
+        print(f"\tmethod {method}: {count}")
+
+    # Count the number of logs with method GET and path /status
+    status_checks = nginx_collection.count_documents({"method": "GET", "path": "/status"})  # noqa
+    print(f"{status_checks} status check")
+
+
 def log_stats(mongo_collection):
     """ Print log statistics, including the top 10 of the most present IPs. """
     top_ips = mongo_collection.aggregate([
