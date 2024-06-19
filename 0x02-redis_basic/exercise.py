@@ -22,9 +22,11 @@ def count_calls(method: Callable) -> Callable:
 
     return wrapper
 
+
 def call_history(method: Callable) -> Callable:
     """
-    Decorator that stores the history of inputs and outputs for a particular function.
+    Decorator that stores the history of inputs and outputs for a particular
+    function.
     """
     inputs_key = f"{method.__qualname__}:inputs"
     outputs_key = f"{method.__qualname__}:outputs"
