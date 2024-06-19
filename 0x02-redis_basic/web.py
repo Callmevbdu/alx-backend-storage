@@ -9,21 +9,6 @@ from functools import wraps
 r = redis.Redis()
 
 
-def cache_page(func):
-    """Decorator to cache the result of a function call."""
-    @wraps(func)
-    def wrapper(url):
-        cached = r.get(url)
-        if cached:
-            return cached.decode('utf-8')
-
-        page_content = func(url)
-        r.setex(url, 10, page_content)
-        return page_content
-    return wrapper
-
-
-@cache_page
 def get_page(url: str) -> str:
     """Fetches the HTML content of a URL and caches it."""
     r.incr(f"count:{url}")
