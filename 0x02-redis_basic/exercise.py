@@ -71,3 +71,22 @@ class Cache:
         """
         value = self._redis.get(key)
         return value if value is not None else None
+
+
+def replay(method: Callable):
+    """
+    Function that displays the history of calls of a particular function.
+    """
+    qualified_name = method.__qualname__
+    inputs_key = f"{qualified_name}:inputs"
+    outputs_key = f"{qualified_name}:outputs"
+
+    redis_instance = method.__self__._redis
+
+    inputs = redis_instance.lrange(inputs_key, 0, -1)
+    outputs = redis_instance.lrange(outputs_key, 0, -1)
+
+    print(f"{qualified_name} was called {len(inputs)} times:")
+
+    for input_str, output_str in zip(inputs, outputs):
+        print(f"{qualified_name}(*{input_str.decode('utf-8')}) -> {output_str.decode('utf-8')}")  # noqa
